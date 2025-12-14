@@ -10,6 +10,25 @@ Trong hoạt động nhà hàng, việc ghi nhận order thủ công dễ gây s
 
 Phân hệ đóng vai trò trung gian giữa thực khách và các bộ phận: **phục vụ – bếp – quản lý**, dữ liệu đồng bộ theo thời gian thực để nâng cao trải nghiệm và hiệu quả vận hành.
 
+## 1.1 Mục tiêu & tính thực tế của dự án
+### Mục tiêu
+- Số hoá quy trình gọi món tại nhà hàng: từ tạo bàn, ghi nhận thông tin khách, gọi món, chế biến đến thanh toán.
+- Giảm sai sót khi ghi order thủ công, đồng thời tăng tốc độ phục vụ nhờ dữ liệu cập nhật tập trung.
+- Cho phép các bộ phận (phục vụ – bếp – quản lý) phối hợp theo một luồng rõ ràng với trạng thái món/đơn hàng minh bạch.
+- Làm quen với kiến trúc dịch vụ & API (REST), thiết kế CSDL và triển khai một hệ thống web đơn giản.
+
+### Tính thực tế
+Dự án mô phỏng sát thực tế vận hành nhà hàng:
+- **Phục vụ/Quản lý** có thể tạo bàn, nhập thông tin khách, nhận order và thao tác nhanh (tăng/giảm số lượng, ghi chú, xóa món).
+- **Bếp** nhận danh sách món cần chế biến theo trạng thái và cập nhật hoàn thành, giúp đồng bộ tiến độ món giữa các bên.
+- **Trạng thái món/đơn** giúp theo dõi minh bạch: món đang làm/đã xong, đơn chưa order/đang xử lý/đã thanh toán.
+- Có thể mở rộng thêm các tính năng “thực chiến” như: phân quyền chi tiết, in hoá đơn, thống kê doanh thu, quản lý kho, realtime bằng WebSocket, tích hợp QR order tại bàn.
+
+---
+
+## Video demo
+- YouTube: https://www.youtube.com/watch?v=HphUzWui0Dk
+
 ---
 
 ## 2. Tác nhân & quyền (Actors / Roles)
@@ -61,6 +80,8 @@ Các thực thể chính:
 ---
 
 ## 6. API (REST) – Base path: `/api/v1`
+> Lưu ý: Endpoint có thể thay đổi tuỳ theo triển khai trong code. Khuyến nghị kiểm tra bằng Swagger UI sau khi chạy backend.
+
 ### 6.1 Foods
 - `GET  /api/v1/foods?status={0|1}`  
   - `status=0`: còn món, `status=1`: hết món
@@ -71,7 +92,7 @@ Các thực thể chính:
 
 ### 6.2 Orders
 - `POST /api/v1/orders/new`  
-  - tạo order/bàn mới (thông tin khách + capacity… tùy hiện thực)
+  - tạo order/bàn mới (thông tin khách + capacity… tuỳ hiện thực)
 - `POST /api/v1/orders/{id}/add`  
   - body ví dụ:
     ```json
@@ -83,7 +104,7 @@ Các thực thể chính:
   - note status: `1` đã thanh toán, `0` chưa thanh toán, `3` chưa order
 - `GET  /api/v1/orders/{id}`
 - `DELETE /api/v1/orders/{id}`
-- `GET  /api/v1/orders/table/{tableId}` *(tên path có thể là biến thể theo code, xem Swagger)*
+- `GET  /api/v1/orders/table/{tableId}` *(tuỳ theo code có thể khác)*
 
 ### 6.3 Order Details
 - `GET    /api/v1/orderDetails`
@@ -93,8 +114,6 @@ Các thực thể chính:
 ### 6.4 Auth / Tables
 - `POST /api/v1/login`
 - `GET  /api/v1/tables`
-
-> Khuyến nghị: chạy backend rồi mở Swagger UI để xem chính xác request/response theo triển khai.
 
 ---
 
